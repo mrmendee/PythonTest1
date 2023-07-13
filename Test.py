@@ -1,8 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 
-
-
 win =Tk()
 
 wr1 = LabelFrame(win)
