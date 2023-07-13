@@ -9,13 +9,19 @@ wr1 = LabelFrame(win)
 wr2 = LabelFrame(win)
 
 mycanvas = Canvas(wr1)
-mycanvas.pack(side=LEFT)
+mycanvas.pack(side=LEFT,fill="both",expand="yes")
 
 yscrollbar = ttk.Scrollbar(wr1, orient="vertical", command=mycanvas.yview)
 yscrollbar.pack(side=RIGHT, fill="y")
 
+
+mycanvas.configure(yscrollcommand=yscrollbar.set)
+
+mycanvas.bind("<Configure>", lambda e: mycanvas.configure(scrollregion= mycanvas.bbox("all")) )
+
 myframe = Frame(mycanvas)
-myframe.pack()
+mycanvas.create_window((0,0),window=myframe,anchor="nw")
+
 
 wr1.pack(fill="both", expand="yes", padx=10,pady=10)
 
