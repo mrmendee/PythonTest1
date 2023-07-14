@@ -1,32 +1,27 @@
-from tkinter import *
-from tkinter import ttk
+import tkinter as tk
 
-win =Tk()
+root = tk.Tk()
 
-wr1 = LabelFrame(win)
-wr2 = LabelFrame(win)
+main_frame = tk.Frame(root)
+main_frame.grid()
 
-mycanvas = Canvas(wr1)
-mycanvas.pack(side=LEFT,fill="both",expand="yes")
+subframe1 = tk.Frame(main_frame, width=200, height=200, bg="red")
+subframe1.grid(row=0, column=0)
 
-yscrollbar = ttk.Scrollbar(wr1, orient="vertical", command=mycanvas.yview)
-yscrollbar.pack(side=RIGHT, fill="y")
+canvas = tk.Canvas(subframe1, width=200, height=200)
+canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
+scrollbar = tk.Scrollbar(subframe1, orient=tk.VERTICAL, command=canvas.yview)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-mycanvas.configure(yscrollcommand=yscrollbar.set)
+canvas.configure(yscrollcommand=scrollbar.set)
 
-mycanvas.bind("<Configure>", lambda e: mycanvas.configure(scrollregion= mycanvas.bbox("all")) )
+# Add your widgets or content to the canvas
+for i in range(30):
+    label = tk.Label(canvas, text=f"Label {i+1}")
+    canvas.create_window(10, i*20, anchor=tk.NW, window=label)
 
-myframe = Frame(mycanvas)
-mycanvas.create_window((0,0),window=myframe,anchor="nw")
+canvas.update_idletasks()
+canvas.configure(scrollregion=canvas.bbox("all"))
 
-
-wr1.pack(fill="both", expand="yes", padx=10,pady=10)
-
-for i in range(50):
-    Button(myframe, text="My Button - "+str(i)).pack()
-
-win.geometry("500x500")
-win.resizable(False,False)
-win.title("Testing")
-win.mainloop()
+root.mainloop()
