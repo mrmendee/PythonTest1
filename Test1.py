@@ -1,33 +1,47 @@
-import tkinter as tk
+from tkinter import *
+from tkinter import ttk
 
-class App:
-    def __init__(self, root : tk.Tk = None):
-        self.root :tk.Tk = root
-        self.root.title("Hi")
-        self.root.geometry("400x200")
-        
-        # Main Frame
-        self.main_frame = tk.Frame(self.root)
-        self.main_frame.grid()
 
-        # top frame
-        self.top_frame = tk.Frame(self.main_frame,bg="red",width=200,height=100)
-        self.top_frame.grid(row=0,column=0)
-        
-        # left frame
-        self.left_frame = tk.Frame(self.main_frame,bg="green",width=200,height=100)
-        self.left_frame.grid(row=1,column=1)
-        self.button = tk.Button(self.left_frame, text="Click me!", command=self.button_clicked)
-        self.button.place(x=0,y=0)
-    
-    def button_clicked(self):
-        self.label.config(text="Button clicked!")
-    
-    def run(self):
-        self.root.mainloop()
+root = Tk()
+root.title('Full Window Scrolling X Y Scrollbar Example')
+root.geometry("1000x800")
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    
-    app = App(root)
-    app.run()
+# Create A Main frame
+main_frame = Frame(root)
+main_frame.pack(fill=BOTH,expand=1)
+
+# Create Frame for X Scrollbar
+sec = Frame(main_frame)
+sec.pack(fill=X,side=BOTTOM)
+
+
+# Create A Canvas
+my_canvas = Canvas(main_frame)
+my_canvas.pack(side=LEFT,fill=BOTH,expand=1)
+
+# Add A Scrollbars to Canvas
+x_scrollbar = ttk.Scrollbar(sec,orient=HORIZONTAL,command=my_canvas.xview)
+x_scrollbar.pack(side=BOTTOM,fill=X)
+
+y_scrollbar = ttk.Scrollbar(main_frame,orient=VERTICAL,command=my_canvas.yview)
+y_scrollbar.pack(side=RIGHT,fill=Y)
+
+# Configure the canvas
+my_canvas.bind('<Control MouseWheel>', lambda event: my_canvas.xview_scroll(-int(event.delta / 60), "units"))
+my_canvas.configure(xscrollcommand=x_scrollbar.set)
+my_canvas.configure(yscrollcommand=y_scrollbar.set)
+my_canvas.bind("<Configure>",lambda e: my_canvas.config(scrollregion= my_canvas.bbox(ALL))) 
+
+# Create Another Frame INSIDE the Canvas
+second_frame = Frame(my_canvas)
+
+# Add that New Frame a Window In The Canvas
+my_canvas.create_window((0,0),window= second_frame, anchor="nw")
+
+for thing in range(100):
+    Button(second_frame ,text=f"Button  {thing}").grid(row=5,column=thing,pady=10,padx=10)
+
+for thing in range(100):
+    Button(second_frame ,text=f"Button  {thing}").grid(row=thing,column=5,pady=10,padx=10)
+
+root.mainloop()
