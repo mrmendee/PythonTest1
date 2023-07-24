@@ -1,6 +1,4 @@
 from tkinter import *
-from tkinter import ttk
-
 
 root = Tk()
 root.title('Full Window Scrolling X Y Scrollbar Example')
@@ -9,7 +7,7 @@ root.geometry("1000x800")
 main_frame = Frame(root)
 main_frame.pack()
 
-canv = Canvas(main_frame)
+canv = Canvas(main_frame, width=500, height=300)
 frame = Frame(canv)
 ybar = Scrollbar(main_frame)
 
@@ -19,15 +17,18 @@ def createScrollableContainer():
 
     ybar.pack(fill=Y, side=RIGHT, expand=FALSE)
     canv.pack(fill=BOTH, side=LEFT, expand=TRUE)
-    canv.create_window(0,0,window=frame, anchor=NW)
+    canv.create_window(0, 0, window=frame, anchor=NW)
 
 createScrollableContainer()
 
 for i in range(50):
-    Label(frame, text=f"Label-{i}").grid(row=i,column=0)
+    label = Label(frame, text=f"Label-{i}")
+    label.grid(row=i, column=0)
 
-canv.update_idletasks()
+canv.update()
 canv.config(scrollregion=frame.bbox())
 
+# マウスホイールイベントをCanvasにバインドする
+canv.bind("<MouseWheel>", lambda e: canv.yview_scroll(int(-1 * (e.delta / 120)), "units"))
 
 root.mainloop()
