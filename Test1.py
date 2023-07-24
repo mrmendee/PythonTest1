@@ -6,42 +6,28 @@ root = Tk()
 root.title('Full Window Scrolling X Y Scrollbar Example')
 root.geometry("1000x800")
 
-# Create A Main frame
 main_frame = Frame(root)
-main_frame.pack(fill=BOTH,expand=1)
+main_frame.pack()
 
-# Create Frame for X Scrollbar
-sec = Frame(main_frame)
-sec.pack(fill=X,side=BOTTOM)
+canv = Canvas(main_frame)
+frame = Frame(canv)
+ybar = Scrollbar(main_frame)
 
+def createScrollableContainer():
+    canv.config(yscrollcommand=ybar.set, highlightthickness=0)
+    ybar.config(orient=VERTICAL, command=canv.yview)
 
-# Create A Canvas
-my_canvas = Canvas(main_frame)
-my_canvas.pack(side=LEFT,fill=BOTH,expand=1)
+    ybar.pack(fill=Y, side=RIGHT, expand=FALSE)
+    canv.pack(fill=BOTH, side=LEFT, expand=TRUE)
+    canv.create_window(0,0,window=frame, anchor=NW)
 
-# Add A Scrollbars to Canvas
-x_scrollbar = ttk.Scrollbar(sec,orient=HORIZONTAL,command=my_canvas.xview)
-x_scrollbar.pack(side=BOTTOM,fill=X)
+createScrollableContainer()
 
-y_scrollbar = ttk.Scrollbar(main_frame,orient=VERTICAL,command=my_canvas.yview)
-y_scrollbar.pack(side=RIGHT,fill=Y)
+for i in range(50):
+    Label(frame, text=f"Label-{i}").grid(row=i,column=0)
 
-# Configure the canvas
-my_canvas.bind('<Control MouseWheel>', lambda event: my_canvas.xview_scroll(-int(event.delta / 60), "units"))
-my_canvas.configure(xscrollcommand=x_scrollbar.set)
-my_canvas.configure(yscrollcommand=y_scrollbar.set)
-my_canvas.bind("<Configure>",lambda e: my_canvas.config(scrollregion= my_canvas.bbox(ALL))) 
+canv.update_idletasks()
+canv.config(scrollregion=frame.bbox())
 
-# Create Another Frame INSIDE the Canvas
-second_frame = Frame(my_canvas)
-
-# Add that New Frame a Window In The Canvas
-my_canvas.create_window((0,0),window= second_frame, anchor="nw")
-
-for thing in range(100):
-    Button(second_frame ,text=f"Button  {thing}").grid(row=5,column=thing,pady=10,padx=10)
-
-for thing in range(100):
-    Button(second_frame ,text=f"Button  {thing}").grid(row=thing,column=5,pady=10,padx=10)
 
 root.mainloop()
