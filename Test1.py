@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 
 root = Tk()
 root.title('Full Window Scrolling X Y Scrollbar Example')
@@ -15,9 +16,13 @@ canv.create_window((0, 0), window=scr_frame, anchor=NW)
 canv.configure(yscrollcommand=ybar.set, highlightthickness=0)
 
 for i in range(50):
-    label = Label(scr_frame, text=f"Label-{i}",background="blue",width=9)
-    label.grid(row=i, column=0,padx=1,pady=1)
+    label = ttk.Label(scr_frame, text=f"Haha",width=9,relief="groove",border=1)
+    label.grid(row=i, column=0,padx=2,pady=2)
     label.bind("<MouseWheel>", lambda e: canv.yview_scroll(int(-1 * (e.delta)), "units"))
+
+    btn = ttk.Button(scr_frame, text=f"Button-{i}",width=9)
+    btn.grid(row=i, column=1)
+    btn.bind("<MouseWheel>", lambda e: canv.yview_scroll(int(-1 * (e.delta)), "units"))
 
 main_frame.pack()
 canv.pack(fill=BOTH, side=LEFT, expand=TRUE)
